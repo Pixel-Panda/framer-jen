@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { createOllama } from 'ollama-ai-provider'
-// import { createOpenAI } from '@ai-sdk/openai'
+import { createOpenAI } from '@ai-sdk/openai'
 import { google } from '@ai-sdk/google'
 import { anthropic } from '@ai-sdk/anthropic'
 import { CoreMessage } from 'ai'
@@ -14,15 +14,15 @@ export function getModel(useSubModel = false) {
   const ollamaBaseUrl = process.env.OLLAMA_BASE_URL + '/api'
   const ollamaModel = process.env.OLLAMA_MODEL
   const ollamaSubModel = process.env.OLLAMA_SUB_MODEL
-  //const openaiApiBase = process.env.OPENAI_API_BASE
-  //const openaiApiKey = process.env.OPENAI_API_KEY
-  //let openaiApiModel = process.env.OPENAI_API_MODEL || 'gpt-4o'
+  const openaiApiBase = process.env.OPENAI_API_BASE
+  const openaiApiKey = process.env.OPENAI_API_KEY
+  let openaiApiModel = process.env.OPENAI_API_MODEL || 'gpt-4o'
   const googleApiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY
   const anthropicApiKey = process.env.ANTHROPIC_API_KEY
 
   if (
     !(ollamaBaseUrl && ollamaModel) &&
-    // !openaiApiKey &&
+    !openaiApiKey &&
     !googleApiKey &&
     !anthropicApiKey
   ) {
@@ -51,7 +51,7 @@ export function getModel(useSubModel = false) {
 
   // Fallback to OpenAI instead
 
-  const gemini = createOpenAI({
+  const openai = createOpenAI({
     baseURL: openaiApiBase, // optional base URL for proxies etc.
     apiKey: openaiApiKey, // optional API key, default to env property OPENAI_API_KEY
     organization: '' // optional organization
